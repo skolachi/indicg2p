@@ -2,7 +2,7 @@ Universal Grapheme-to-Phoneme converter for Indian languages
 ------------------------------------------------------------
 03/09/2019
 
-1. Created a mapping for unicode code points and roman characters
+1. Created a mapping for unicode code points and different roman transliteration schemes
 2. Need to distinguish between independent (akshar) and dependent (maatra) 
 based on name of the code
 3. Convert independent signs first.
@@ -20,6 +20,12 @@ python3 indicg2p.py --lang <dev/telugu/malayalam/gurmukhi> -- infile <hin_input.
 11. Scripts prints converted text to stdout
 12. Tested using hin_input*.txt (sources: http://sahigyan.com, https://www.hindikiduniya.com/hindi-essay/) 
 and tel_input*.txt (source: http://eemaata.com).
+
+Transliteration schemes:
+1. Roman transliteration scheme based on unicode code definitions at https://www.unicode.org/charts/PDF/U0900.pdf
+2. Sampa transliteration scheme based on character definitions in http://tdil.meity.gov.in/WSI/docs/PLexicon1.pdf 
+and https://docit.tips/download/sampa-for-hindi-and-punjabi-based-on-their-acoustic-and-phonetic_pdf
+3. Some character definitions added to sampa charset- halant and nukta (_)
 
 Issues:
 1. what about word-final schwa deletion in Hindi?

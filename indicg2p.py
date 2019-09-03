@@ -4,8 +4,10 @@ import re
 from unicodedata import *
 
 language_prefixes = {'dev':'09','telugu':'0C','gurmukhi':'0A','malayalam':'0D'}
+maps = {'roman':'indicg2p.map','sampa':'indicg2sampa.map','ipa':'indicg2ipa.map'}
 
-def extract_charmap(filename='indicg2p.map',lang='dev'):
+def extract_charmap(charset,lang='dev'):
+    filename = maps[charset]
     g2pmap = {}
     chars = [f.strip().split(',') for f in open(filename)][1:]
     lang_chars = [language_prefixes[lang]+c[1][2:] for c in chars]
@@ -26,8 +28,8 @@ def group_charmap(charmap):
 
     return charmap_groups
 
-def convert(text,lang):
-    charmap = extract_charmap(lang=lang)
+def convert(text,charset,lang):
+    charmap = extract_charmap(charset,lang=lang)
     charmap_groups = group_charmap(charmap)
     #print(charmap_groups['maatra'])
     for k in charmap.keys():
@@ -35,9 +37,9 @@ def convert(text,lang):
             text = text.replace(k[1],charmap[k])
 
     for k in charmap_groups['diacritic']:
-        if charmap[k] == 'M':
+        if 'ANUSVARA' in name(k[0]).split():
             text = text.replace('%s'%(k[1]),charmap[k])
-        if charmap[k] == 'za':
+        if 'NUKTA' in name(k[0]).split():
             text = text.replace('%s'%('a'+k[1]),charmap[k])
 
     for k in charmap_groups['maatra']:
@@ -48,10 +50,11 @@ def convert(text,lang):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--infile", help="input file",required=True)
-    parser.add_argument("--lang", help="Language",required=True)
+    parser.add_argument("--infile",help="input file",required=True)
+    parser.add_argument("--charset",choices=['roman','sampa','ipa'],help="transliteration scheme",required=True)
+    parser.add_argument("--lang",help="Language",required=True)
     args = parser.parse_args()
-    print(convert(open(args.infile).read(),args.lang))
+    print(convert(open(args.infile).read(),args.charset,args.lang))
 
 if __name__ == "__main__":
     main()
