@@ -19,7 +19,6 @@ def group_charmap(charmap):
     charmap_groups['maatra'] = []
     charmap_groups['diacritic'] = []
     for k in charmap.keys():
-        print(name(k[0]))
         if 'ANUSVARA' in name(k[0]).split() or 'NUKTA' in name(k[0]).split():
             charmap_groups['diacritic'].append(k)
         if 'SIGN' in name(k[0]).split():
