@@ -3,8 +3,10 @@ import argparse
 import re
 from unicodedata import *
 
-language_prefixes = {'dev':'09','telugu':'0C','gurmukhi':'0A','malayalam':'0D'}
-maps = {'roman':'indicg2p.map','sampa':'indicg2sampa.map','ipa':'indicg2ipa.map'}
+language_prefixes = {['dev':'09','telugu':'0C','gurmukhi':'0A','oriya':'0B','malayalam':'0D'],
+                    ['bangla':'09','gujarati':'0A','kannada':'0C','tamil':'0B','sinhala':'0D']}
+
+maps = {'roman':'indicg2roman.map','sampa':'indicg2sampa.map','ipa':'indicg2ipa.map','wx':'indicg2wx.map'}
 
 def extract_charmap(charset,lang='dev'):
     filename = maps[charset]
@@ -51,7 +53,7 @@ def convert(text,charset,lang):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--infile",help="input file",required=True)
-    parser.add_argument("--charset",choices=['roman','sampa','ipa'],help="transliteration scheme",required=True)
+    parser.add_argument("--charset",choices=['roman','sampa','ipa','wx'],help="transliteration scheme",required=True)
     parser.add_argument("--lang",help="Language",required=True)
     args = parser.parse_args()
     print(convert(open(args.infile).read(),args.charset,args.lang))
