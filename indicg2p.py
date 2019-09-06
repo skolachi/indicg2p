@@ -1,21 +1,32 @@
 
 import argparse
+import pandas as pd
 import re
 from unicodedata import *
 
-language_prefixes = {['dev':'09','telugu':'0C','gurmukhi':'0A','oriya':'0B','malayalam':'0D'],
-                    ['bangla':'09','gujarati':'0A','kannada':'0C','tamil':'0B','sinhala':'0D']}
+language_prefixes = {'dev':{'dev':'09','telugu':'0C','gurmukhi':'0A','oriya':'0B','malayalam':'0D'},
+        'ban':{'bengali':'09','gujarati':'0A','kannada':'0C','tamil':'0B','sinhala':'0D'}}
 
 maps = {'roman':'indicg2roman.map','sampa':'indicg2sampa.map','ipa':'indicg2ipa.map','wx':'indicg2wx.map'}
 
+def extract_langcharmap(df,charset,lang):
+    if lang in language_prefixes['dev']:
+        chars = list(zip(df[charset].tolist(),df['Devnagari'].tolist()))
+        lang_chars = [str(language_prefixes['dev'][lang]+c[1][2:]) for c in chars]
+    elif lang in language_prefixes['ban']:
+        chars = list(zip(df[charset].tolist(),df['Bengali'].tolist()))
+        lang_chars = [str(language_prefixes['ban'][lang]+c[1][2:]) for c in chars]
+  
+    return chars, lang_chars
+
 def extract_charmap(charset,lang='dev'):
-    filename = maps[charset]
+    filename = 'indicg2ipawx.map'
+    df = pd.read_csv(filename,sep=',')
+    chars, lang_chars = extract_langcharmap(df,charset,lang)
     g2pmap = {}
-    chars = [f.strip().split(',') for f in open(filename)][1:]
-    lang_chars = [language_prefixes[lang]+c[1][2:] for c in chars]
     for c1,c2 in zip(chars,lang_chars):
         if c1[0] == 'NULL':c1[0] = ''
-        g2pmap[(eval('u"\\u%s"'%(c1[1])),eval('u"\\u%s"'%(c2)))] = c1[0]
+        g2pmap[(eval('u"\\u%s"'%(c1[1])),eval('u"\\u%s"'%(c2)))] = str(c1[0])
     return g2pmap
 
 def group_charmap(charmap):
