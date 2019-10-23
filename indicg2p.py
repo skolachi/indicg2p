@@ -7,7 +7,7 @@ from unicodedata import *
 language_prefixes = {'dev':{'dev':'09','telugu':'0C','gurmukhi':'0A','oriya':'0B','malayalam':'0D'},
         'ban':{'bengali':'09','gujarati':'0A','kannada':'0C','tamil':'0B','sinhala':'0D'}}
 
-maps = {'roman':'indicg2roman.map','sampa':'indicg2sampa.map','ipa':'indicg2ipa.map','wx':'indicg2wx.map'}
+#maps = {'roman':'indicg2roman.map','sampa':'indicg2sampa.map','ipa':'indicg2ipa.map','wx':'indicg2wx.map'}
 
 def extract_langcharmap(df,charset,lang):
     if lang in language_prefixes['dev']:
@@ -20,7 +20,7 @@ def extract_langcharmap(df,charset,lang):
     return chars, lang_chars
 
 def extract_charmap(charset,lang='dev'):
-    filename = 'indicg2ipawx.map'
+    filename = 'indicg2p.map'
     df = pd.read_csv(filename,sep=',')
     chars, lang_chars = extract_langcharmap(df,charset,lang)
     g2pmap = {}
@@ -64,7 +64,7 @@ def convert(text,charset,lang):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--infile",help="input file",required=True)
-    parser.add_argument("--charset",choices=['roman','sampa','ipa','wx'],help="transliteration scheme",required=True)
+    parser.add_argument("--charset",choices=['sampa','ipa','wx'],help="transliteration scheme",required=True)
     parser.add_argument("--lang",help="Language",required=True)
     args = parser.parse_args()
     print(convert(open(args.infile).read(),args.charset,args.lang))
