@@ -46,7 +46,7 @@ def group_charmap(charmap):
 def convert(text,charset,lang):
     charmap = extract_charmap(charset,lang=lang)
     charmap_groups = group_charmap(charmap)
-    print(charmap_groups['maatra'],charmap_groups['diacritic'])
+    #print(charmap_groups['maatra'],charmap_groups['diacritic'])
     for k in charmap.keys():
         if k not in charmap_groups['maatra']:
             text = text.replace(k[1],charmap[k])
